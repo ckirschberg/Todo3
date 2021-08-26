@@ -1,16 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, FlatList } from 'react-native';
+
+
+const Item = ({ title }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+  </View>
+);
 
 export default function App() {
   const [text, onChangeText] = React.useState("");
   const [todos, setTodos] = React.useState([]);
 
+ 
+  
+
+
   const handleAddTodo = () => {
-    setTodos(todos => [...todos, text]);
+    setTodos(todos => [...todos, {title: text, id: Math.random().toString() }]);
     console.log(todos);
   }
 
+  const renderItem = ({ item }) => (
+    <Item title={item.title} />
+  );
 
   return (
     <View style={styles.container}>
@@ -26,6 +40,13 @@ export default function App() {
         title="Add Todo"
         onPress={handleAddTodo}
       />
+
+      <FlatList
+        data={todos}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
+
       <StatusBar style="auto" />
     </View>
   );
