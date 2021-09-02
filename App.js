@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput, FlatList } from 'react-native';
+import { useEffect, useState } from 'react';
 
 
 const Item = ({ title }) => (
@@ -10,20 +11,29 @@ const Item = ({ title }) => (
 );
 
 export default function App() {
-  const [text, onChangeText] = React.useState("");
-  const [todos, setTodos] = React.useState([]);
+  const [text, onChangeText] = useState("");
+  const [todos, setTodos] = useState([]);
 
+  const removeTodoItem = (id) => {
+    setTodos(todos => todos.filter(todo => todo.id !== id));
+    console.log("deleting item id: " + id);
+  }
  
-  
-
-
   const handleAddTodo = () => {
     setTodos(todos => [...todos, {title: text, id: Math.random().toString() }]);
-    console.log(todos);
+    
   }
+  useEffect(() => {
+    console.log(todos);
+  }, [todos]);
+  
+  console.log(todos);
 
   const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <View>
+      <Item title={item.title} />
+      <Button onPress={removeTodoItem.bind(this, item.id)} title="Delete"></Button>
+    </View>
   );
 
   return (
